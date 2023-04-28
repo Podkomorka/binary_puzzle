@@ -35,6 +35,8 @@ while (true) {
     swapType = !swapType
 }
 
+// Function check duplicate rows and columns
+
 function checkTriples() {
     if (checkRowsTriples(grid)) {
         console.log("Triples in rows")
@@ -59,6 +61,7 @@ function checkColsTriples() {
             column.push(row[i])
             
         })
+
         columnsAsRows.push(column)
     
         if (checkRowsTriples(columnsAsRows)) {
@@ -93,7 +96,6 @@ function checkRowsTriples(inputGrid) {
 
             lastNum = num         
         })  
-        
     })
 
     return triples
