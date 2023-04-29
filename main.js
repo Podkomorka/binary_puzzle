@@ -7,69 +7,63 @@ const grid = [[1, 1, 1, 0, 0, 0],
               [0, 0, 0, 1, 1, 1]]
 
 
-// Main loop to swap and check if the grid is legal
-let swapType = true
-let count = 0
-while (true) {
-    count++
 
-    // Alternate swapping columns and rows each loop
-    swapType ? swapRandCols() : swapRandRows()
+generateGrid()
 
-    // Check grid for all requirements
-    if (checkTriples()) {
-        console.log("Found a grid in " + count + " tries.")
-        console.log(grid)
-        break
+
+
+
+function generateGrid() {
+    // Main loop to swap and check if the grid is legal
+    let swapType = true
+    let count = 0
+    while (true) {
+        count++
+    
+        // Alternate swapping columns and rows each loop
+        swapType ? swapRandCols() : swapRandRows()
+    
+        // Check grid for all requirements
+        if (checkTriples()) {
+            console.log("Found a grid in " + count + " tries.")
+            console.log(grid)
+            break
+        }
+    
+        // Prevent looping too long
+        if (count >= 1000 ) {
+            console.log("Reached count " + count + ". Too many tries.")
+            break;
+        }
+    
+        // const currentGrid = [...grid]
+        // console.log(currentGrid)
+    
+        swapType = !swapType
     }
-
-    // Prevent looping too long
-    if (count >= 1000 ) {
-        console.log("Reached count " + count + ". Too many tries.")
-        break;
-    }
-
-    const currentGrid = [...grid]
-    console.log(currentGrid)
-
-    swapType = !swapType
 }
 
-// Function check duplicate rows and columns
-
 function checkTriples() {
-    if (checkRowsTriples(grid)) {
-        console.log("Triples in rows")
-        return false
-    }
-
-    if (checkColsTriples()) {
-        console.log("Triples in cols")
+    if (checkRowsTriples(grid) || checkRowsTriples(rotateGrid(grid))) {
         return false
     }
 
     return true
 }
 
-function checkColsTriples() {
-    let triples = false
-    columnsAsRows = []
+function rotateGrid(inputGrid) {
+    rotatedGrid = []
 
-    for (let i = 0; i < grid.length; i++) {
+    for (let i = 0; i < inputGrid.length; i++) {
         column = []
-        grid.forEach((row) => {
+        inputGrid.forEach((row) => {
             column.push(row[i])
-            
         })
 
-        columnsAsRows.push(column)
-    
-        if (checkRowsTriples(columnsAsRows)) {
-            triples = true
-        }
+        rotatedGrid.push(column)
     }
 
-    return triples
+    return rotatedGrid
 }
 
 function checkRowsTriples(inputGrid) {
