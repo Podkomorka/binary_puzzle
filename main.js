@@ -1,19 +1,14 @@
-// Starting grid
-const grid = [[1, 1, 1, 0, 0, 0],
-              [1, 1, 1, 0, 0, 0],
-              [1, 1, 1, 0, 0, 0],
-              [0, 0, 0, 1, 1, 1],
-              [0, 0, 0, 1, 1, 1],
-              [0, 0, 0, 1, 1, 1]]
-
-
-
 generateGrid()
 
-
-
-
 function generateGrid() {
+    // Starting grid
+    let grid = [[1, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [1, 1, 1, 0, 0, 0],
+                [0, 0, 0, 1, 1, 1],
+                [0, 0, 0, 1, 1, 1],
+                [0, 0, 0, 1, 1, 1]]
+
     // Main loop to swap and check if the grid is legal
     let swapType = true
     let count = 0
@@ -21,10 +16,10 @@ function generateGrid() {
         count++
     
         // Alternate swapping columns and rows each loop
-        swapType ? swapRandCols() : swapRandRows()
-    
+        swapType ? grid = swapRandRows(grid) : grid = swapRandRows(rotateGrid(grid))
+
         // Check grid for all requirements
-        if (checkTriples()) {
+        if (checkRowsTriples(grid) && checkRowsTriples(rotateGrid(grid)) && checkRowDuplicates(grid)) {
             console.log("Found a grid in " + count + " tries.")
             console.log(grid)
             break
@@ -36,19 +31,26 @@ function generateGrid() {
             break;
         }
     
-        // const currentGrid = [...grid]
-        // console.log(currentGrid)
-    
         swapType = !swapType
     }
 }
 
-function checkTriples() {
-    if (checkRowsTriples(grid) || checkRowsTriples(rotateGrid(grid))) {
-        return false
+function checkRowDuplicates(inputGrid) {
+    let duplicate = false
+
+    for (let i = 0; i < inputGrid.length; i++) {
+        for (let k = (i + 1); k < inputGrid.length; k++) {
+            row1 = [...inputGrid[i]]
+            row2 = [...inputGrid[k]]
+            console.log(row1, row2)
+            if (row1 === row2) {
+                console.log("These are the same")
+                duplicate = true
+            }
+        }
     }
 
-    return true
+    return !duplicate
 }
 
 function rotateGrid(inputGrid) {
@@ -92,45 +94,27 @@ function checkRowsTriples(inputGrid) {
         })  
     })
 
-    return triples
+    return !triples
 }
           
-function swapRandRows() {
-
+function swapRandRows(inputGrid) {
     // Make array of numbers equal to grid length
-    for (var i = 0, rows = []; i < grid.length; i++) {
+    for (var i = 0, rows = []; i < inputGrid.length; i++) {
         rows.push(i)
     }
-
+    
     // Get two random row positions without repeating a position
     const [randRow1] = rows.splice(Math.floor(Math.random()*rows.length - 1), 1)
     const [randRow2] = rows.splice(Math.floor(Math.random()*rows.length - 1), 1)
-
+    
     // Make temporary first row from grid
-    const tempRow = grid[randRow1]
+    const tempRow = inputGrid[randRow1]
     
     // Set the first random row equal to the second random row
-    grid[randRow1] = grid[randRow2]
-
+    inputGrid[randRow1] = inputGrid[randRow2]
+    
     // Set the second random row equal to the temporary row
-    grid[randRow2] = tempRow
-}
-
-function swapRandCols() {
-    // Make array of numbers equal to grid length
-    for (var i = 0, cols = []; i < grid.length; i++) cols.push(i)
-
-    // Get two random column positions without repeating a position
-    const [randCol1] = cols.splice(Math.floor(Math.random()*cols.length - 1), 1)
-    const [randCol2] = cols.splice(Math.floor(Math.random()*cols.length - 1), 1)
-
-    // Make temporary first column from grid
-    const tempCol = []
-    grid.forEach((row) => tempCol.push(row[randCol1]))
-
-    // Set the first random column equal to the second random column
-    grid.forEach((_, i) => grid[i][randCol1] = grid[i][randCol2])
-
-    // Set the second random column equal to the temporary column
-    grid.forEach((_, i) => grid[i][randCol2] = tempCol[i])
+    inputGrid[randRow2] = tempRow
+    
+    return inputGrid
 }
