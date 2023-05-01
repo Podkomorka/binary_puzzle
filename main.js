@@ -18,19 +18,23 @@ function generateGrid() {
         // Alternate swapping columns and rows each loop
         swapType ? grid = swapRandRows(grid) : grid = swapRandRows(rotateGrid(grid))
 
+        if (checkRowDuplicates(grid)) console.log("No row dups")
+        if (checkRowDuplicates(rotateGrid(grid))) console.log("No row dups")
+
         // Check grid for all requirements
-        if (checkRowsTriples(grid) && checkRowsTriples(rotateGrid(grid)) && checkRowDuplicates(grid)) {
+        if (checkRowsTriples(grid) && checkRowsTriples(rotateGrid(grid))) {
             console.log("Found a grid in " + count + " tries.")
             console.log(grid)
             break
         }
     
         // Prevent looping too long
-        if (count >= 1000 ) {
+        if (count >= 10000 ) {
             console.log("Reached count " + count + ". Too many tries.")
             break;
         }
     
+        console.log()
         swapType = !swapType
     }
 }
@@ -40,12 +44,9 @@ function checkRowDuplicates(inputGrid) {
 
     for (let i = 0; i < inputGrid.length; i++) {
         for (let k = (i + 1); k < inputGrid.length; k++) {
-            row1 = [...inputGrid[i]]
-            row2 = [...inputGrid[k]]
-            console.log(row1, row2)
-            if (row1 === row2) {
-                console.log("These are the same")
+            if (inputGrid[i].toString() === inputGrid[k].toString()) {
                 duplicate = true
+                return !duplicate
             }
         }
     }
@@ -118,3 +119,8 @@ function swapRandRows(inputGrid) {
     
     return inputGrid
 }
+
+ar1 = [1,2,3,4]
+ar2 = [1,2,3,4]
+
+console.log(ar1.toString() === ar2.toString())
